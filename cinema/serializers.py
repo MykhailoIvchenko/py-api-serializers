@@ -12,6 +12,8 @@ from cinema.models import (
 
 
 class CinemaHallSerializer(serializers.ModelSerializer):
+    capacity = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = CinemaHall
         fields = "__all__"
@@ -32,8 +34,14 @@ class ActorSerializer(serializers.ModelSerializer):
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    genres = GenreSerializer(many=True, read_only=True)
-    actors = ActorSerializer(many=True, read_only=True)
+    class Meta:
+        model = Movie
+        fields = "__all__"
+
+
+class MovieRetrieveSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True)
+    actors = ActorSerializer(many=True)
 
     class Meta:
         model = Movie
@@ -58,7 +66,14 @@ class MovieListSerializer(MovieSerializer):
 
 
 class MovieSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MovieSession
+        fields = "__all__"
+
+
+class MovieSessionRetrieveSerializer(serializers.ModelSerializer):
     movie = MovieListSerializer(many=False, read_only=True)
+    cinema_hall = CinemaHallSerializer(many=False, read_only=True)
 
     class Meta:
         model = MovieSession
